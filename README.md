@@ -1,4 +1,4 @@
 jaot
 ====
 
-Java implementation of AOT morphology
+Java implementation of AOT(aot.ru) morphology
