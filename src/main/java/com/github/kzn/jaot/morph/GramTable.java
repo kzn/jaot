@@ -78,11 +78,11 @@ public class GramTable {
 			List<String> feats = new ArrayList<String>();
 			if(parts.length > 3) {
 				for(String feat : Splitter.on(',').omitEmptyStrings().split(parts[3])) {
-					feats.add(feat);
+					feats.add(feat.intern());
 				}
 			}
 
-			content.put(key, new Record(pos, type, feats));
+			content.put(key, new Record(pos.intern(), type.intern(), feats));
 		}
 	}
 	
