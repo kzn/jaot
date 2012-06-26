@@ -1,0 +1,129 @@
+<morph>
+    <language>russian</language>
+    <features>
+	<group name="POS">
+	   <feat>С</feat>
+	   <feat>П</feat>
+	   <feat>Г</feat>
+	   <feat>МС</feat>
+	   <feat>МС-П</feat>
+	   <feat>МС-ПРЕДК</feat>
+	   <feat>ЧИСЛ</feat>
+	   <feat>ЧИСЛ-П</feat>
+	   <feat>Н</feat>
+	   <feat>ПРЕДК</feat>
+	   <feat>ПРЕДЛ</feat>
+	   <feat>ПОСЛ</feat>
+	   <feat>СОЮЗ</feat>
+	   <feat>МЕЖД</feat>
+	   <feat>ВВОДН</feat>
+	   <feat>ФРАЗ</feat>
+	   <feat>ЧАСТ</feat>
+	   <feat>КР_ПРИЛ</feat>
+	   <feat>ПРИЧАСТИЕ</feat>
+	   <feat>ДЕЕПРИЧАСТИЕ</feat>
+	   <feat>КР_ПРИЧАСТИЕ</feat>
+	   <feat>ИНФИНИТИВ</feat>
+       </group>
+
+       <group name="number">
+	   <feat>мн</feat>
+	   <feat>ед</feat>
+       </group>
+
+       <group name="case">
+	   <feat>им</feat>
+	   <feat>рд</feat>
+	   <feat>дт</feat>
+	   <feat>вн</feat>
+	   <feat>тв</feat>
+	   <feat>пр</feat>
+	   <feat>зв</feat>
+       </group>
+
+       <group name="gender">
+	   <feat>мр</feat>
+	   <feat>жр</feat>
+	   <feat>ср</feat>
+	   <feat>мр-жр</feat>
+       </group>
+
+       <group name="tense">
+	   <feat>нст</feat>
+	   <feat>буд</feat>
+	   <feat>прш</feat>
+       </group>
+
+       <group name="person">
+	   <feat>1л</feat>
+	   <feat>2л</feat>
+	   <feat>3л</feat>
+       </group>
+
+       <group name="mood">
+	   <feat>пвл</feat>
+       </feat>
+
+       <group name="anim">
+	   <feat>од</feat>
+	   <feat>но</feat>
+       </group>
+
+       <group name="degree">
+	   <feat>сравн</feat>
+	   <feat>кр</feat>
+       </group>
+
+       <group name="aspect">
+	   <feat>св</feat>
+	   <feat>нс</feat>
+       </group>
+
+       <group name="trans">
+	   <feat>нп</feat>
+	   <feat>пе</feat>
+       </group>
+
+       <group name="voice">
+	   <feat>дст</feat>
+	   <feat>стр</feat>
+       </group>
+
+       <group name="adv-type">
+	   <feat>вопр</feat>
+	   <feat>указат</feat>
+	   <feat>относ</feat>
+       </group>
+
+       <group name="case-aux">
+	   <feat>0</feat>
+	   <feat>2</feat>
+       </group>
+
+       <group name="word-type">
+	   <feat>аббр</feat>
+	   <feat>имя</feat>
+	   <feat>отч</feat>
+	   <feat>фам</feat>
+	   <feat>лок</feat>
+	   <feat>орг</feat>
+       </group>
+
+       <group name="misc">
+	   <feat>безл</feat>
+	   <feat>кач</feat>		   	
+	   <feat>дфст</feat>
+	   <feat>жарг</feat>
+	   <feat>опч</feat>
+	   <feat>разг</feat>
+	   <feat>притяж</feat>
+	   <feat>арх</feat>
+	   <feat>поэт</feat>
+	   <feat>проф</feat>
+	   <feat>прев</feat>
+	   <feat>полож</feat>
+       </group>
+
+   </features>
+</morph>
+
