@@ -1,5 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <morph>
     <language>russian</language>
+	<gramTable>rgramtab.tab</gramTable>
+	<mrd>russian.mrd</mrd>
+	
     <features>
 	<group name="POS">
 	   <feat>С</feat>
@@ -62,7 +66,7 @@
 
        <group name="mood">
 	   <feat>пвл</feat>
-       </feat>
+       </group>
 
        <group name="anim">
 	   <feat>од</feat>
