@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <morph>
     <language>russian</language>
-	<gramTable>rgramtab.tab</gramTable>
-	<mrd>russian.mrd</mrd>
+	<gramTable>seman/trunk/Dicts/Morph/rgramtab.tab</gramTable>
+	<mrd>seman/trunk/Dicts/SrcMorph/RusSrc/morphs.mrd</mrd>
 	
     <features>
 	<group name="POS">
