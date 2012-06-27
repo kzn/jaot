@@ -90,6 +90,9 @@ public class GramTable {
 					feats.add(feat.intern());
 				}
 			}
+			
+			if(pos == "*")
+				pos = null;
 
 			content.put(key, new Record(pos.intern(), type.intern(), feats));
 		}
