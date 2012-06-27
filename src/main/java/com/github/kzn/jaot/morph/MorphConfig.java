@@ -1,6 +1,7 @@
 package com.github.kzn.jaot.morph;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -77,7 +78,7 @@ public class MorphConfig {
 				.toString();
 	}
 	
-	public MorphConfig() {}
+	protected MorphConfig() {}
 	
 	public MorphConfig(String language) {
 		this.language = language;
@@ -96,7 +97,17 @@ public class MorphConfig {
 	
 	
 
-
+	public static MorphConfig newInstance(File file) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(MorphConfig.class);
+		Unmarshaller um = jaxbContext.createUnmarshaller();
+		return (MorphConfig) um.unmarshal(file);
+	}
+	
+	public static MorphConfig newInstance(InputStream is) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(MorphConfig.class);
+		Unmarshaller um = jaxbContext.createUnmarshaller();
+		return (MorphConfig) um.unmarshal(is);
+	}
 	
 	
 	public static void main(String[] args) throws JAXBException {
