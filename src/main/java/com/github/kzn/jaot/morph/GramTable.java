@@ -38,6 +38,15 @@ public class GramTable {
 			this.feats = feats;
 		}
 		
+		public List<String> feats() {
+			List<String> res = new ArrayList<String>(feats.size() + 1);
+			if(pos != null && !pos.isEmpty())
+				res.add(pos);
+			res.addAll(feats);
+			
+			return res;
+		}
+		
 		@Override
 		public String toString() {
 			return Objects.toStringHelper(this)
@@ -81,6 +90,9 @@ public class GramTable {
 					feats.add(feat.intern());
 				}
 			}
+			
+			if(pos == "*")
+				pos = null;
 
 			content.put(key, new Record(pos.intern(), type.intern(), feats));
 		}
