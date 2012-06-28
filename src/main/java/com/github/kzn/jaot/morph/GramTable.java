@@ -91,10 +91,10 @@ public class GramTable {
 				}
 			}
 			
-			if(pos == "*")
+			if(pos.equals("*"))
 				pos = null;
 
-			content.put(key, new Record(pos.intern(), type.intern(), feats));
+			content.put(key, new Record(pos != null? pos.intern() : null, type.intern(), feats));
 		}
 	}
 	
