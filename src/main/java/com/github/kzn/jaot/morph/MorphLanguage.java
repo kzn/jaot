@@ -12,6 +12,7 @@ import java.util.Map;
 import com.google.common.base.Objects;
 
 public class MorphLanguage {
+	public static final BitSet EMPTY = new BitSet();
 	
 	public static abstract class AbstractFeature {
 		public static final int EMPTY_ID = -1;
@@ -129,18 +130,21 @@ public class MorphLanguage {
 	List<String> featList = new ArrayList<String>(); // ordered list of features
 	Map<String, AbstractFeature> feats = new HashMap<String, MorphLanguage.AbstractFeature>();
 	// ancode mapping
-	Map<String, BitSet> anCodes = new HashMap<String, BitSet>();
+	Map<GramTable.Record, BitSet> anCodes = new HashMap<GramTable.Record, BitSet>();
 	// 
 	
 	GramTable gramTable; 
+	MorphConfig mc;
 	
 	public MorphLanguage(MorphConfig mc) throws IOException {
+		this.mc = mc;
 		for(MorphConfig.Group g : mc.groups) {
 			Group group = new Group(g.getName(), null);
 			feats.put(group.getName(), group);
 			
 			for(String feat : g.feats) {
 				Feature f = new Feature(featList.size(), feat, group);
+				group.add(f);
 				featList.add(feat.intern());
 				feats.put(feat, f);
 			}
@@ -182,21 +186,35 @@ public class MorphLanguage {
 		return res;
 	}
 	
-	public BitSet mapAncode(String anCode) {
-		BitSet res = anCodes.get(anCode);
+	public BitSet mapAncode(GramTable.Record rec) {
+		if(rec == null)
+			return EMPTY;
+		BitSet res = anCodes.get(rec);
 		
 		if(res != null)
 			return res;
 		
-		GramTable.Record rec = gramTable.get(anCode);
-		if(rec == null)
-			return new BitSet();
-		
 		List<String> feats = rec.feats();
 		
 		res = convert(feats);
-		anCodes.put(anCode, res);
+		anCodes.put(rec, res);
 		return res;
+	}
+	
+	public BitSet getWordFormFeats(GramTable.Record feats, GramTable.Record common) {
+		BitSet res = new BitSet();
+		res.or(mapAncode(feats));
+		if(common != null)
+			res.or(mapAncode(common));
+		
+		return res;
+	}
+	
+	public MorphDict readDict() throws IOException {
+		MorphDict md = new MorphDict(gramTable);
+		md.read(new File(mc.mrdPath), Charset.forName("windows-1251"));
+		
+		return md;
 	}
 	
 
