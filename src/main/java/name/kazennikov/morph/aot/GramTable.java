@@ -1,4 +1,4 @@
-package com.github.kzn.jaot.morph;
+package name.kazennikov.morph.aot;
 
 import java.io.BufferedReader;
 import java.io.File;

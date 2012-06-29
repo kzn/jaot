@@ -1,4 +1,4 @@
-package com.github.kzn.jaot.morph;
+package name.kazennikov.morph.aot;
 
 import java.util.ArrayList;
 import java.util.List;
