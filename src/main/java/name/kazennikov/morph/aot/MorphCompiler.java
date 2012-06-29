@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
+import name.kazennikov.morph.fsa.CharFSA;
 import name.kazennikov.morph.fsa.SimpleTrie;
 import name.kazennikov.morph.fsa.Trie;
 
@@ -41,7 +42,17 @@ public class MorphCompiler {
         return chars;
     }
     
-    public static List<Pair<Character, Character>> expand(String wordForm, String lemma) {
+    public static List<Character> expandReverse(String s) {
+        List<Character> chars = new ArrayList<Character>();
+
+        for(int i = 0; i != s.length(); i++) {
+            chars.add(charMap[s.charAt(s.length() - 1 - i)]);
+        }
+        return chars;
+    }
+
+    
+    /*public static List<Pair<Character, Character>> expand(String wordForm, String lemma) {
         List<Pair<Character, Character>> chars = new ArrayList<Pair<Character, Character>>();
         
         int len = Math.max(wordForm.length(), lemma.length());
@@ -52,7 +63,7 @@ public class MorphCompiler {
             chars.add(Pair.of(charMap[wfChar], charMap[lemmaChar]));
         }
         return chars;
-    }
+    }*/
 
     public static class FSANode extends Trie.SimpleNode<Character, Set<Integer>, Integer> {
 
@@ -66,7 +77,7 @@ public class MorphCompiler {
         }
     }
     
-    public static class FSTNode extends Trie.SimpleNode<Pair<Character, Character>, Set<Integer>, Integer> {
+    /*public static class FSTNode extends Trie.SimpleNode<Pair<Character, Character>, Set<Integer>, Integer> {
 
         public FSTNode(Set<Integer> fin) {
             super(fin);
@@ -76,7 +87,7 @@ public class MorphCompiler {
         public Trie.SimpleNode makeNode() {
             return new FSTNode(new HashSet<Integer>());
         }
-    }
+    }*/
 	public static void main(String[] args) throws JAXBException, IOException {
 		MorphConfig mc = MorphConfig.newInstance(new File("russian.xml"));
 		
@@ -87,21 +98,22 @@ public class MorphCompiler {
 		
 
 		
-
+		CharFSA.IntSimpleTrie chfsa = new CharFSA.IntSimpleTrie(new CharFSA.SimpleNode());
         SimpleTrie<Character, Set<Integer>, Integer> trieFsa =
                 new SimpleTrie<Character, Set<Integer>, Integer>(new FSANode(new HashSet<Integer>()));
         
-        SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer> trieFst =
+        /*SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer> trieFst =
                 new SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer>(new FSTNode(new HashSet<Integer>()));
         
         SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer> reverseTrieFst =
-                new SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer>(new FSTNode(new HashSet<Integer>()));
+                new SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer>(new FSTNode(new HashSet<Integer>()));*/
 
 
         
         TObjectIntHashMap<BitSet> featSets = new TObjectIntHashMap<BitSet>();
 
         StringBuilder sb = new StringBuilder();
+        int wfNum = 0;
 		for(MorphDict.Lemma lemma : md.lemmas) {
 			for(MorphDict.WordForm wf : lemma.expand()) {
 				BitSet feats = ml.getWordFormFeats(wf.feats, wf.commonAnCode);
@@ -114,10 +126,16 @@ public class MorphCompiler {
 				
 				sb.setLength(0);
 				sb.append(wf.wordForm).reverse();
+				wfNum++;
 				
-				//trieFsa.addMinWord(expand(wf.wordForm), featId);
+				trieFsa.addMinWord(expand(wf.wordForm), featId);
+				chfsa.addMinWord(wf.wordForm, featId);
+				
+				if(trieFsa.size() != chfsa.size()) {
+					sb = sb;
+				}
                 //trieFst.addMinWord(expand(wf.wordForm, wf.lemma), featId);
-                reverseTrieFst.addMinWord(expand(sb.toString(), new StringBuilder(wf.lemma).reverse().toString()), featId);
+				//reverseTrieFst.addMinWord(expand(sb.toString(), new StringBuilder(wf.lemma).reverse().toString()), featId);
 			}
 			
 		}
@@ -125,8 +143,9 @@ public class MorphCompiler {
 		st = System.currentTimeMillis() - st;
 		System.out.printf("Elapsed: %d ms%n", st);
         System.out.printf("FSA size: %d%n", trieFsa.size());
-        System.out.printf("FST size: %d%n", reverseTrieFst.size());
-        System.out.printf("Reverse FST size: %d%n", trieFst.size());
+        System.out.printf("charFSA size: %d%n", chfsa.size());
+        //System.out.printf("FST size: %d%n", reverseTrieFst.size());
+        //System.out.printf("Reverse FST size: %d%n", trieFst.size());
 		System.out.printf("Dict size: %d%n", md.lemmas.size());
 		
 	}
