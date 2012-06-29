@@ -128,12 +128,9 @@ public class MorphCompiler {
 				sb.append(wf.wordForm).reverse();
 				wfNum++;
 				
-				trieFsa.addMinWord(expand(wf.wordForm), featId);
+				//trieFsa.addMinWord(expand(wf.wordForm), featId);
 				chfsa.addMinWord(wf.wordForm, featId);
 				
-				if(trieFsa.size() != chfsa.size()) {
-					sb = sb;
-				}
                 //trieFst.addMinWord(expand(wf.wordForm, wf.lemma), featId);
 				//reverseTrieFst.addMinWord(expand(sb.toString(), new StringBuilder(wf.lemma).reverse().toString()), featId);
 			}

@@ -223,19 +223,11 @@ public class CharFSA {
 					return false;
 				
 				TCharObjectIterator<Node> 
-					it1 = out.iterator(),
-					it2 = other.out.iterator();
+					it1 = out.iterator();
 				
 				while(it1.hasNext()) {
-					if(!it2.hasNext())
-						return false;
 					it1.advance();
-					it2.advance();
-					
-					if(it1.key() != it2.key())
-						return false;
-					
-					if(it2.value() != it2.value())
+					if(other.getNext(it1.key()) != it1.value())
 						return false;
 				}
 			}
