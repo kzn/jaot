@@ -12,8 +12,8 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
-import name.kazennikov.morph.fsa.SimpleTrie;
-import name.kazennikov.morph.fsa.Trie;
+import name.kazennikov.dafsa.GenericFSA;
+import name.kazennikov.dafsa.GenericTrie;
 
 public class TestRun {
 
@@ -26,14 +26,14 @@ public class TestRun {
         return chars;
     }
 
-    public static class FSTNode extends Trie.SimpleNode<Character, Set<Integer>, Integer> {
+    public static class FSTNode extends GenericTrie.SimpleNode<Character, Set<Integer>, Integer> {
 
         public FSTNode(Set<Integer> fin) {
             super(fin);
         }
 
         @Override
-        public Trie.SimpleNode makeNode() {
+        public GenericTrie.SimpleNode makeNode() {
             return new FSTNode(new HashSet<Integer>());
         }
     }
@@ -48,8 +48,8 @@ public class TestRun {
 
 		
 
-        SimpleTrie<Character, Set<Integer>, Integer> trie =
-                new SimpleTrie<Character, Set<Integer>, Integer>(new FSTNode(new HashSet<Integer>()));
+        GenericFSA<Character, Set<Integer>, Integer> trie =
+                new GenericFSA<Character, Set<Integer>, Integer>(new FSTNode(new HashSet<Integer>()));
         
         TObjectIntHashMap<BitSet> featSets = new TObjectIntHashMap<BitSet>();
 

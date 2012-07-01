@@ -1,5 +1,6 @@
 package name.kazennikov.morph.aot;
 
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import java.io.File;
@@ -12,11 +13,20 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
-import name.kazennikov.morph.fsa.CharFSA;
-import name.kazennikov.morph.fsa.SimpleTrie;
-import name.kazennikov.morph.fsa.Trie;
+import name.kazennikov.dafsa.CharFSA;
+import name.kazennikov.dafsa.CharTrie;
+import name.kazennikov.dafsa.GenericTrie;
+import name.kazennikov.dafsa.GenericFSA;
+import name.kazennikov.dafsa.IntTrie;
 
 public class MorphCompiler {
+	
+	public static class Transition {
+		int state;
+		char label;
+		int next;
+	}
+	
 	MorphLanguage morphLanguage;
 	MorphDict morphDict;
 	public static final Character[] charMap = new Character[65536];
@@ -65,14 +75,14 @@ public class MorphCompiler {
         return chars;
     }*/
 
-    public static class FSANode extends Trie.SimpleNode<Character, Set<Integer>, Integer> {
+    public static class FSANode extends GenericTrie.SimpleNode<Character, Set<Integer>, Integer> {
 
         public FSANode(Set<Integer> fin) {
             super(fin);
         }
 
         @Override
-        public Trie.SimpleNode makeNode() {
+        public GenericTrie.SimpleNode makeNode() {
             return new FSANode(new HashSet<Integer>());
         }
     }
@@ -96,11 +106,12 @@ public class MorphCompiler {
 		long st = System.currentTimeMillis();
 		MorphDict md = ml.readDict();
 		
-
 		
-		CharFSA.IntSimpleTrie chfsa = new CharFSA.IntSimpleTrie(new CharFSA.SimpleNode());
-        SimpleTrie<Character, Set<Integer>, Integer> trieFsa =
-                new SimpleTrie<Character, Set<Integer>, Integer>(new FSANode(new HashSet<Integer>()));
+		CharTrie chTrie = new CharTrie();
+		CharTrie chTrie1 = new CharTrie();
+		CharFSA chfsa = new CharFSA(new CharFSA.SimpleNode());
+        GenericFSA<Character, Set<Integer>, Integer> trieFsa =
+                new GenericFSA<Character, Set<Integer>, Integer>(new FSANode(new HashSet<Integer>()));
         
         /*SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer> trieFst =
                 new SimpleTrie<Pair<Character, Character>, Set<Integer>, Integer>(new FSTNode(new HashSet<Integer>()));
@@ -124,12 +135,44 @@ public class MorphCompiler {
 					featSets.put(feats, featId);
 				}
 				
-				sb.setLength(0);
-				sb.append(wf.wordForm).reverse();
+				//sb.setLength(0);
+				//sb.append(wf.wordForm).reverse();
 				wfNum++;
 				
+				if(wfNum % 10000 == 0) {
+					System.out.printf("%d wordforms, fsa size: %d%n", wfNum, chTrie.size());
+				}
+				
 				//trieFsa.addMinWord(expand(wf.wordForm), featId);
-				chfsa.addMinWord(wf.wordForm, featId);
+				//chfsa.add(wf.wordForm, featId);
+				final String s = wf.wordForm;
+				//chTrie.add(wf.wordForm, featId);
+				
+				//chfsa.addMinWord(s, featId);
+
+				
+				chTrie1.add(new TIntIterator() {
+					int pos = 0;
+
+					@Override
+					public void remove() {
+
+					}
+
+					@Override
+					public boolean hasNext() {
+						return pos < s.length();
+					}
+
+					@Override
+					public int next() {
+						return s.charAt(pos++);
+					}
+				}, featId);
+//				
+//				if(chTrie.size() != chTrie1.size()) {
+//					wfNum = wfNum;
+//				}
 				
                 //trieFst.addMinWord(expand(wf.wordForm, wf.lemma), featId);
 				//reverseTrieFst.addMinWord(expand(sb.toString(), new StringBuilder(wf.lemma).reverse().toString()), featId);
