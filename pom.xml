@@ -16,5 +16,10 @@
   		<artifactId>trove4j</artifactId>
   		<version>3.0.3</version>
   	</dependency>
+  	<dependency>
+  		<groupId>name.kazennikov</groupId>
+  		<artifactId>dafsa</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>

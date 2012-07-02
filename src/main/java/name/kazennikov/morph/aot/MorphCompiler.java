@@ -1,6 +1,7 @@
 package name.kazennikov.morph.aot;
 
 import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import java.io.File;
@@ -13,10 +14,14 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+
 import name.kazennikov.dafsa.CharFSA;
 import name.kazennikov.dafsa.CharTrie;
 import name.kazennikov.dafsa.GenericTrie;
 import name.kazennikov.dafsa.GenericFSA;
+import name.kazennikov.dafsa.IntFSA;
 import name.kazennikov.dafsa.IntTrie;
 
 public class MorphCompiler {
@@ -87,6 +92,27 @@ public class MorphCompiler {
         }
     }
     
+    public static void expand(TIntArrayList dest, String wf, String lemma) {
+    	dest.clear();
+    	
+    	for(int i = 0; i != Math.max(wf.length(), lemma.length()); i++) {
+    		char wfch = i < wf.length()? wf.charAt(i) : 0;
+    		char lmch = i < lemma.length()? lemma.charAt(i) : 0;
+    		int label = wfch;
+    		label <<= 16;
+    		label += lmch;
+    		dest.add(label);
+    	}
+    }
+    
+    public static void expand(TIntArrayList dest, String wf) {
+    	dest.clear();
+    	
+    	for(int i = 0; i != wf.length(); i++) {
+    		dest.add(wf.charAt(i));
+    	}
+    }
+    
     /*public static class FSTNode extends Trie.SimpleNode<Pair<Character, Character>, Set<Integer>, Integer> {
 
         public FSTNode(Set<Integer> fin) {
@@ -110,6 +136,7 @@ public class MorphCompiler {
 		CharTrie chTrie = new CharTrie();
 		CharTrie chTrie1 = new CharTrie();
 		CharFSA chfsa = new CharFSA(new CharFSA.SimpleNode());
+		IntFSA intfsa = new IntFSA(new IntFSA.SimpleNode());
         GenericFSA<Character, Set<Integer>, Integer> trieFsa =
                 new GenericFSA<Character, Set<Integer>, Integer>(new FSANode(new HashSet<Integer>()));
         
@@ -124,7 +151,11 @@ public class MorphCompiler {
         TObjectIntHashMap<BitSet> featSets = new TObjectIntHashMap<BitSet>();
 
         StringBuilder sb = new StringBuilder();
+        TIntArrayList intLabels = new TIntArrayList(32);
         int wfNum = 0;
+        Multiset<String> predictionSet = HashMultiset.create();
+        
+        
 		for(MorphDict.Lemma lemma : md.lemmas) {
 			for(MorphDict.WordForm wf : lemma.expand()) {
 				BitSet feats = ml.getWordFormFeats(wf.feats, wf.commonAnCode);
@@ -146,29 +177,37 @@ public class MorphCompiler {
 				//trieFsa.addMinWord(expand(wf.wordForm), featId);
 				//chfsa.add(wf.wordForm, featId);
 				final String s = wf.wordForm;
+				predictionSet.add(new String(s.substring(s.length() > 5? s.length() - 1 - 5 : 0)));
 				//chTrie.add(wf.wordForm, featId);
-				
+				//expand(intLabels, wf.wordForm);
+				//expand(intLabels, wf.wordForm, wf.lemma);
 				//chfsa.addMinWord(s, featId);
+				//intfsa.addMinWord(intLabels, featId);
+				
+				/*if(chfsa.size() != intfsa.size()) {
+					wfNum = wfNum;
+				}*/
+				
 
 				
-				chTrie1.add(new TIntIterator() {
-					int pos = 0;
-
-					@Override
-					public void remove() {
-
-					}
-
-					@Override
-					public boolean hasNext() {
-						return pos < s.length();
-					}
-
-					@Override
-					public int next() {
-						return s.charAt(pos++);
-					}
-				}, featId);
+//				chTrie1.add(new TIntIterator() {
+//					int pos = 0;
+//
+//					@Override
+//					public void remove() {
+//
+//					}
+//
+//					@Override
+//					public boolean hasNext() {
+//						return pos < s.length();
+//					}
+//
+//					@Override
+//					public int next() {
+//						return s.charAt(pos++);
+//					}
+//				}, featId);
 //				
 //				if(chTrie.size() != chTrie1.size()) {
 //					wfNum = wfNum;
@@ -184,6 +223,7 @@ public class MorphCompiler {
 		System.out.printf("Elapsed: %d ms%n", st);
         System.out.printf("FSA size: %d%n", trieFsa.size());
         System.out.printf("charFSA size: %d%n", chfsa.size());
+        System.out.printf("intFSA size: %d%n", intfsa.size());
         //System.out.printf("FST size: %d%n", reverseTrieFst.size());
         //System.out.printf("Reverse FST size: %d%n", trieFst.size());
 		System.out.printf("Dict size: %d%n", md.lemmas.size());
