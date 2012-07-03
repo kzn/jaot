@@ -45,8 +45,22 @@ public class MorphDict {
 					.toString();
 			
 		}
-		
-		
+
+		public String getWordForm() {
+			return wordForm;
+		}
+
+		public String getLemma() {
+			return lemma;
+		}
+
+		public GramTable.Record getFeats() {
+			return feats;
+		}
+
+		public GramTable.Record getCommonAnCode() {
+			return commonAnCode;
+		}
 	}
 	
 	public static class Lemma {
@@ -306,6 +320,16 @@ public class MorphDict {
 			if(!cont)
 				break;
 		}
+	}
+	
+	public <T> void processLemmas(LemmaProcessor<T> lemmaProcessor) {
+		for(Lemma lemma : lemmas) {
+			lemmaProcessor.process(lemma);
+		}
+	}
+	
+	public List<Lemma> getLemmas() {
+		return lemmas;
 	}
 
 	
