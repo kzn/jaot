@@ -86,7 +86,7 @@ public class MorphData {
 		public boolean process(CharSequence s, StringBuilder out, int startIndex, int endIndex, TIntSet fin);
 	}
 	
-	protected void walkIterativeInternal(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
+	protected static void walkIterativeInternal(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
 			int state, char ch, ParseProcessor parseProcessor) {
 		long value = fst.getTransitionsInfo(state, ch);
 		int start = fst.getTransitionsStart(value);
@@ -108,7 +108,7 @@ public class MorphData {
 
 	}
 	
-	public void walkIterative(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
+	public static void walkIterative(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
 			int state, ParseProcessor parseProcessor) {
 		TIntSet fin = fst.getFinals(state);
 
