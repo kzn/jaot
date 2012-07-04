@@ -86,7 +86,7 @@ public class MorphData {
 		public boolean process(CharSequence s, StringBuilder out, int startIndex, int endIndex, TIntSet fin);
 	}
 	
-	protected static void walkIterativeInternal(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
+	protected static boolean walkIterativeInternal(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
 			int state, char ch, ParseProcessor parseProcessor) {
 		long value = fst.getTransitionsInfo(state, ch);
 		int start = fst.getTransitionsStart(value);
@@ -98,34 +98,58 @@ public class MorphData {
 			int nextState = fst.getTransitionNext(start);
 			if(outCh != 0)
 				sb.append(outCh);
-			walkIterative(fst, s, sb, startIndex, endIndex, currentIndex != endIndex? currentIndex + 1: endIndex, 
-					nextState, parseProcessor);
+			int nextIndex = currentIndex;
+			// do not jump to next char on null char walk
+			if(ch != 0) {
+				nextIndex = currentIndex != endIndex? currentIndex + 1: endIndex;
+			}
+			boolean res = walkIterative(fst, s, sb, startIndex, endIndex, nextIndex, nextState, parseProcessor);
+			
+			if(!res)
+				return false;
+			
 			if(outCh != 0)
 				sb.deleteCharAt(sb.length() - 1);
 
 			start++;
 		}
 
+		return true;
 	}
 	
-	public static void walkIterative(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
+	public static boolean walkIterative(IntNFSA fst, CharSequence s, StringBuilder sb, int startIndex, int endIndex, int currentIndex, 
 			int state, ParseProcessor parseProcessor) {
 		TIntSet fin = fst.getFinals(state);
 
 			if(fin != null && !fin.isEmpty()) {
-				parseProcessor.process(s, sb, startIndex, currentIndex, fin);
+				System.out.printf("state %d: ", state);
+				boolean res = parseProcessor.process(s, sb, startIndex, currentIndex, fin);
+				if(!res)
+					return res;
 			}
 			
 			char ch = currentIndex < endIndex? s.charAt(currentIndex) : 0;
-			walkIterativeInternal(fst, s, sb, startIndex, endIndex, currentIndex, state, ch, parseProcessor);
+			boolean res = true;
+			
+			res = walkIterativeInternal(fst, s, sb, startIndex, endIndex, currentIndex, state, ch, parseProcessor);
+			if(!res)
+				return false;
+			
 			char toUpper = Character.toUpperCase(ch);
 			if(toUpper != ch) {
-				walkIterativeInternal(fst, s, sb, startIndex, endIndex, currentIndex, state, toUpper, parseProcessor);
+				res = walkIterativeInternal(fst, s, sb, startIndex, endIndex, currentIndex, state, toUpper, parseProcessor);
+				if(!res)
+					return false;
 			}
 			
 			// for single-pass morphan on fst only
 			ch = 0;
-			walkIterativeInternal(fst, s, sb, startIndex, endIndex, currentIndex, state, (char)0, parseProcessor);
+			res = walkIterativeInternal(fst, s, sb, startIndex, endIndex, currentIndex, state, (char)0, parseProcessor);
+			
+			if(!res)
+				return false;
+			
+			return true;
 
 	}
 	

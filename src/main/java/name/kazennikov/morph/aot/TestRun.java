@@ -60,6 +60,9 @@ public class TestRun {
         IntFSA fst = new IntFSA(new IntFSA.SimpleNode());
         TIntArrayList fstInput = new TIntArrayList();
 		for(MorphDict.Lemma lemma : md.lemmas) {
+			if(!lemma.lemma.equals("МАМА"))
+				continue;
+			
 			for(MorphDict.WordForm wf : lemma.expand()) {
 				BitSet feats = ml.getWordFormFeats(wf.feats, wf.commonAnCode);
 				int featId = featSets.get(feats);
@@ -68,11 +71,15 @@ public class TestRun {
 					featId = featSets.size() + 1;
 					featSets.put(feats, featId);
 				}
+				
+
 				MorphCompiler.expand(fstInput, wf.wordForm, wf.lemma);
                 fst.addMinWord(fstInput, featId);
 			}
 			
 		}
+		
+		fst.toDot("mama.dot");
 
 		st = System.currentTimeMillis() - st;
 		System.out.printf("Elapsed: %d ms%n", st);
@@ -94,7 +101,7 @@ public class TestRun {
 			}
 		});
 		
-		MorphData.walkIterative(nfsa, "СТЕНА", new StringBuilder(), 0, 4, 0, 1, new ParseProcessor() {
+		MorphData.walkIterative(nfsa, "МАМА", new StringBuilder(), 0, 4, 0, 1, new ParseProcessor() {
 			
 			@Override
 			public boolean process(final CharSequence s, final StringBuilder out, final int startIndex,
@@ -108,7 +115,7 @@ public class TestRun {
 					}
 				});
 
-				return true;
+				return false;
 			}
 		});
 
