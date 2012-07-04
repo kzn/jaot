@@ -136,7 +136,7 @@ public class MorphData {
 
 		final MorphData mdata = MorphData.read(new File("russian.dat"));
 		
-		mdata.walkIterative(mdata.fst, "МАМЫ", new StringBuilder(), 0, 4, 0, 1, new ParseProcessor() {
+		mdata.walkIterative(mdata.fst, "СТЕНА", new StringBuilder(), 0, 4, 0, 1, new ParseProcessor() {
 			
 			@Override
 			public boolean process(final CharSequence s, final StringBuilder out, final int startIndex,
