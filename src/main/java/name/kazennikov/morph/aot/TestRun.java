@@ -2,9 +2,7 @@ package name.kazennikov.morph.aot;
 
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TObjectIntHashMap;
-import gnu.trove.procedure.TIntProcedure;
 import gnu.trove.procedure.TObjectIntProcedure;
-import gnu.trove.set.TIntSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,12 +15,10 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
-import name.kazennikov.dafsa.GenericFSA;
 import name.kazennikov.dafsa.GenericTrie;
 import name.kazennikov.dafsa.IntFSA;
 import name.kazennikov.dafsa.IntNFSA;
 import name.kazennikov.dafsa.IntNFSA.IntNFSABuilder;
-import name.kazennikov.morph.aot.MorphData.ParseProcessor;
 
 public class TestRun {
 
@@ -102,26 +98,6 @@ public class TestRun {
 				return true;
 			}
 		});
-		
-		MorphData.walkIterative(nfsa, "МАМА", new StringBuilder(), 0, 4, 0, 1, new ParseProcessor() {
-			
-			@Override
-			public boolean process(final CharSequence s, final StringBuilder out, final int startIndex,
-					final int endIndex, TIntSet fin) {
-				fin.forEach(new TIntProcedure() {
-					
-					@Override
-					public boolean execute(int value) {
-						System.out.printf("parse: %s-%s%s%n", s.subSequence(startIndex, endIndex), out, ml.convert(fss[value]));
-						return true;
-					}
-				});
-
-				return false;
-			}
-		});
-
-		
 		
 	}
 
