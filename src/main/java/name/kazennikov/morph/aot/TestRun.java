@@ -8,6 +8,7 @@ import gnu.trove.set.TIntSet;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashSet;
@@ -78,8 +79,9 @@ public class TestRun {
 			}
 			
 		}
-		
-		fst.toDot("mama.dot");
+		PrintWriter pw = new PrintWriter("mama.dot");
+		fst.write(new IntFSA.FSTDotFormatter(pw));
+		pw.close();
 
 		st = System.currentTimeMillis() - st;
 		System.out.printf("Elapsed: %d ms%n", st);
