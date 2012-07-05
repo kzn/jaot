@@ -10,22 +10,11 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import javax.swing.event.InternalFrameAdapter;
 import javax.xml.bind.JAXBException;
 
-import org.omg.CORBA.FREE_MEM;
-
 import name.kazennikov.dafsa.CharFSA;
-import name.kazennikov.dafsa.CharTrie;
-import name.kazennikov.dafsa.GenericFSA;
-import name.kazennikov.dafsa.GenericTrie;
 import name.kazennikov.dafsa.IntFSA;
 
 import com.google.common.base.Objects;
@@ -145,9 +134,9 @@ public class MorphCompiler {
 		try {
 			dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(dest)));
 			write(dos, featSets);
-			fsa.write(new CharFSAWriter(dos));
-			fst.write(new IntFSAWriter(dos));
-			fstGuesser.write(new IntFSAWriter(dos));
+			fsa.write(new CharFSA.FileWriter(dos));
+			fst.write(new IntFSA.FileWriter(dos));
+			fstGuesser.write(new IntFSA.FileWriter(dos));
 		} finally {
 			if(dos != null)
 				dos.close();
@@ -178,85 +167,7 @@ public class MorphCompiler {
 		}
 	}
 	
-	public static class IntFSAWriter implements IntFSA.Events { 
-		DataOutputStream s;
-
-		public IntFSAWriter(DataOutputStream s) {
-			this.s = s;
-		}
-
-		@Override
-		public void states(int states) throws IOException {
-			s.writeInt(states);
-		}
-
-		@Override
-		public void state(int state) throws IOException {
-			s.writeInt(state);
-		}
-
-		@Override
-		public void finals(int n) throws IOException {
-			s.writeInt(n);
-		}
-
-		@Override
-		public void stateFinal(int fin) throws IOException {
-			s.writeInt(fin);
-		}
-
-		@Override
-		public void transitions(int n) throws IOException {
-			s.writeInt(n);
-			
-		}
-
-		@Override
-		public void transition(int input, int dest) throws IOException {
-			s.writeInt(input);
-			s.writeInt(dest);
-		}
-	}
 	
-	public static class CharFSAWriter implements CharFSA.Events { 
-		DataOutputStream s;
-
-		public CharFSAWriter(DataOutputStream s) {
-			this.s = s;
-		}
-
-		@Override
-		public void states(int states) throws IOException {
-			s.writeInt(states);
-		}
-
-		@Override
-		public void state(int state) throws IOException {
-			s.writeInt(state);
-		}
-
-		@Override
-		public void finals(int n) throws IOException {
-			s.writeInt(n);
-		}
-
-		@Override
-		public void stateFinal(int fin) throws IOException {
-			s.writeInt(fin);
-		}
-
-		@Override
-		public void transitions(int n) throws IOException {
-			s.writeInt(n);
-			
-		}
-
-		@Override
-		public void transition(char input, int dest) throws IOException {
-			s.writeInt(input);
-			s.writeInt(dest);
-		}
-	}
 
 	
     
