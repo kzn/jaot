@@ -57,7 +57,7 @@ public class TestRun {
         IntFSA fst = new IntFSA(new IntFSA.SimpleNode());
         TIntArrayList fstInput = new TIntArrayList();
 		for(MorphDict.Lemma lemma : md.lemmas) {
-			if(!lemma.lemma.equals("МАМА"))
+			if(!lemma.lemma.equals("ПРОРАСТИТЬ"))
 				continue;
 			
 			for(MorphDict.WordForm wf : lemma.expand()) {
@@ -70,6 +70,7 @@ public class TestRun {
 				}
 				
 
+				System.out.println(wf.wordForm);
 				MorphCompiler.expand(fstInput, wf.wordForm, wf.lemma);
                 fst.addMinWord(fstInput, featId);
 			}

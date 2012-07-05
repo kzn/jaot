@@ -102,8 +102,13 @@ public class MorphDict {
 				
 				sb.append(stem);
 				sb.append(parEntry.getEnding());
+				String wf = sb.toString();
+				result.add(new WordForm(wf, lemma, feats, commonFeats));
 				
-				result.add(new WordForm(sb.toString(), lemma, feats, commonFeats));
+				if(wf.indexOf("Ё") != -1) {
+					wf = wf.replace('Ё', 'Е');
+					result.add(new WordForm(wf, lemma, feats, commonFeats));
+				}
 			}
 			
 			return result;
