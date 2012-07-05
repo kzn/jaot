@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import name.kazennikov.dafsa.CharFSTWalker;
 import name.kazennikov.dafsa.IntNFSA;
 import name.kazennikov.dafsa.IntNFSA.IntNFSABuilder;
 import name.kazennikov.dafsa.IntTrie;
@@ -68,8 +69,8 @@ public class MorphData {
 			IntNFSABuilder intFSTBuilder = new IntNFSABuilder();
 			IntTrie.Reader.read(s, intFSTBuilder, 4);
 			IntNFSA fst = intFSTBuilder.build();
-			//IntTrie.Reader.read(s, intFSTBuilder, 4);
-			//IntNFSA guesser = intFSTBuilder.build();
+			IntTrie.Reader.read(s, intFSTBuilder, 4);
+			IntNFSA guesser = intFSTBuilder.build();
 			
 			return new MorphData(featSets, fsa, fst, null);
 			
@@ -160,31 +161,24 @@ public class MorphData {
 
 		final MorphData mdata = MorphData.read(new File("russian.dat"));
 		
-		mdata.walkIterative(mdata.fst, "СТЕНА", new StringBuilder(), 0, 4, 0, 1, new ParseProcessor() {
+		CharFSTWalker walker = mdata.fst.makeFSTWalker();
+		
+		walker.walk("некрофил", 0, 8, new CharFSTWalker.Processor() {
 			
 			@Override
-			public boolean process(final CharSequence s, final StringBuilder out, final int startIndex,
-					final int endIndex, TIntSet fin) {
-				fin.forEach(new TIntProcedure() {
+			public void parse(final CharSequence src, final StringBuilder out, final int start, final int end,
+					TIntSet feats) {
+				feats.forEach(new TIntProcedure() {
 					
 					@Override
 					public boolean execute(int value) {
-						System.out.printf("parse: %s-%s%s%n", s.subSequence(startIndex, endIndex), out, ml.convert(mdata.featSets.get(value)));
+						System.out.printf("parse: %s -> %s%s%n", src.subSequence(start, end), out, ml.convert(mdata.featSets.get(value)));
 						return true;
 					}
 				});
 
-				return true;
+
 			}
 		});
 	}
-
-	
-	
-	
-	
-	
-	
-	
-
 }
