@@ -38,8 +38,8 @@ public class MorphConfig {
 	@XmlElement(name = "group")
 	List<Group> groups;
 	
-	@XmlElement(name = "fst")
-	String fstPath;
+	@XmlElement(name = "dat")
+	String datPath;
 	
 	
 	
@@ -74,6 +74,7 @@ public class MorphConfig {
 				.add("language", language)
 				.add("mrd", mrdPath)
 				.add("gramTable", gramTablePath)
+				.add("dat", datPath)
 				.add("groups", groups)
 				.toString();
 	}

@@ -2,7 +2,7 @@
 <morph>
     <language>russian</language>
 	<gramTable>seman/trunk/Dicts/Morph/rgramtab.tab</gramTable>
-	<mrd>seman/trunk/Dicts/SrcMorph/RusSrc/morphs.mrd</mrd>
+	<mrd>seman/trunk/Dicts/SrcMorph/RusSrc/morphs.mrd</mrd><dat>russian.dat</dat>
 	
     <features>
 	<group name="POS">
@@ -129,5 +129,5 @@
        </group>
 
    </features>
-</morph>
+    </morph>
 

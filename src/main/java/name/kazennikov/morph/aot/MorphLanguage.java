@@ -217,5 +217,11 @@ public class MorphLanguage {
 		return md;
 	}
 	
+	public MorphData readData() throws IOException {
+		MorphData data = MorphData.read(new File(mc.datPath));
+		
+		return data;
+	}
+	
 
 }
