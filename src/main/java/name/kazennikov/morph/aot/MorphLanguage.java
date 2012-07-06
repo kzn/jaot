@@ -158,6 +158,11 @@ public class MorphLanguage {
 		return featList.size();
 	}
 	
+	public BitSet convert(String feat) {
+		return this.feats.get(feat).getValue();
+	}
+	
+	
 	public BitSet convert(List<String> feats) {
 		BitSet value = new BitSet(featList.size());
 		
