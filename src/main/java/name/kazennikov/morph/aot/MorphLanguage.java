@@ -12,6 +12,43 @@ import java.util.Map;
 import com.google.common.base.Objects;
 
 public class MorphLanguage {
+	
+	public static interface FeatsTransformer {
+		public void transform(BitSet feats);
+	}
+	
+	public class RussianTransformer implements FeatsTransformer {
+
+		@Override
+		public void transform(BitSet featSet) {
+			boolean isIndeclinable = featSet.intersects(feats.get("0").getValue());
+			boolean isPredicative = featSet.intersects(feats.get("ПРЕДК").getValue());
+			boolean isPronounP = featSet.intersects(feats.get("МС-П").getValue());
+			boolean isMF = featSet.intersects(feats.get("мр-жр").getValue());
+			boolean isSingular = featSet.intersects(feats.get("ед").getValue());
+			
+			
+			if(isIndeclinable && !isPredicative) {
+				featSet.or(feats.get("case").getValue());
+			}
+			
+			if(isIndeclinable && isPronounP) {
+				featSet.or(feats.get("gender").getValue());
+				featSet.or(feats.get("number").getValue());
+			}
+			
+			if(isMF) {
+				featSet.or(feats.get("gender").getValue());
+			}
+			
+			if(!isPredicative) {
+				if(isIndeclinable && !isSingular) {
+					featSet.or(feats.get("number").getValue());
+				}
+			}
+		}
+	}
+	
 	public static final BitSet EMPTY = new BitSet();
 	
 	public static abstract class AbstractFeature {
@@ -132,7 +169,7 @@ public class MorphLanguage {
 	// ancode mapping
 	Map<GramTable.Record, BitSet> anCodes = new HashMap<GramTable.Record, BitSet>();
 	// 
-	
+	FeatsTransformer featsTransformer = null;
 	GramTable gramTable; 
 	MorphConfig mc;
 	
@@ -152,6 +189,9 @@ public class MorphLanguage {
 		
 		gramTable = new GramTable();
 		gramTable.read(new File(mc.gramTablePath), Charset.forName("windows-1251"));
+		
+		if(mc.language.equals("russian"))
+			featsTransformer = new RussianTransformer();
 	}
 	
 	public int featCount() {
@@ -175,6 +215,8 @@ public class MorphLanguage {
 			
 			value.or(f.getValue());
 		}
+		
+		featsTransformer.transform(value);
 		
 		return value;
 	}
