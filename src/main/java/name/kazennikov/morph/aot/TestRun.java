@@ -15,9 +15,11 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
+import name.kazennikov.dafsa.CharFSA;
 import name.kazennikov.dafsa.GenericTrie;
 import name.kazennikov.dafsa.IntFSA;
 import name.kazennikov.dafsa.IntNFSA;
+import name.kazennikov.dafsa.Nodes;
 import name.kazennikov.dafsa.IntNFSA.IntNFSABuilder;
 
 public class TestRun {
@@ -54,11 +56,14 @@ public class TestRun {
 		
 
         final TObjectIntHashMap<BitSet> featSets = new TObjectIntHashMap<BitSet>();
-        IntFSA fst = new IntFSA(new IntFSA.SimpleNode());
+        IntFSA fst = new IntFSA.Simple(new Nodes.IntTroveNode());
+        CharFSA fsaGold = new CharFSA.Simple(new Nodes.CharTroveNode());
+        CharFSA fsa = new CharFSA.Simple(new Nodes.CharSimpleNode());
         TIntArrayList fstInput = new TIntArrayList();
+        long st1 = System.currentTimeMillis();
+        
+        int count = 0;
 		for(MorphDict.Lemma lemma : md.lemmas) {
-			if(!lemma.lemma.equals("ПРОРАСТИТЬ"))
-				continue;
 			
 			for(MorphDict.WordForm wf : lemma.expand()) {
 				BitSet feats = ml.getWordFormFeats(wf.feats, wf.commonAnCode);
@@ -69,13 +74,23 @@ public class TestRun {
 					featSets.put(feats, featId);
 				}
 				
+				count++;
 
-				System.out.println(wf.wordForm);
+				//System.out.println(wf.wordForm);
 				MorphCompiler.expand(fstInput, wf.wordForm, wf.lemma);
-                fst.addMinWord(fstInput, featId);
+                //fst.add(fstInput, featId);
+				//fsaGold.addMinWord(wf.getWordForm(), featId);
+				fsa.addMinWord(wf.getWordForm(), featId);
+
+				
+//				if(fsa.size() != fsaGold.size()) {
+//					count = count;
+//				}
 			}
 			
 		}
+		
+		System.out.printf("%d ms%n", System.currentTimeMillis() - st1);
 		PrintWriter pw = new PrintWriter("mama.dot");
 		fst.write(new IntFSA.FSTDotFormatter(pw));
 		pw.close();
@@ -83,6 +98,7 @@ public class TestRun {
 		st = System.currentTimeMillis() - st;
 		System.out.printf("Elapsed: %d ms%n", st);
         System.out.printf("FSA size: %d%n", fst.size());
+        System.out.printf("FSA size: %d%n", fsa.size());
 		System.out.printf("Dict size: %d%n", md.lemmas.size());
 		System.out.printf("featSets: %d%n", featSets.size());
 		IntNFSABuilder intFSTBuilder = new IntNFSABuilder();

@@ -16,6 +16,7 @@ import javax.xml.bind.JAXBException;
 
 import name.kazennikov.dafsa.CharFSA;
 import name.kazennikov.dafsa.IntFSA;
+import name.kazennikov.dafsa.Nodes;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.HashMultiset;
@@ -69,10 +70,10 @@ public class MorphCompiler {
 	
 	public void compile(MorphDict md, int predictionDepth, int predictionFreq, File dest) throws IOException {
 		
-		CharFSA fsa = new CharFSA(new CharFSA.SimpleNode());
-		IntFSA fst = new IntFSA(new IntFSA.SimpleNode());
+		CharFSA fsa = new CharFSA.Simple(new Nodes.CharTroveNode());
+		IntFSA fst = new IntFSA.Simple(new Nodes.IntTroveNode());
 		
-		IntFSA fstGuesser = new IntFSA(new IntFSA.SimpleNode());
+		IntFSA fstGuesser = new IntFSA.Simple(new Nodes.IntTroveNode());
         
         TObjectIntHashMap<BitSet> featSets = new TObjectIntHashMap<BitSet>();
 
