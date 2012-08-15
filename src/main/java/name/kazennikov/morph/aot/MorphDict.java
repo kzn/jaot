@@ -82,6 +82,15 @@ public class MorphDict {
 			this.prefixes = prefixes;
 		}
 		
+		public String getLemma() {
+			return lemma;
+		}
+		
+		public Paradigm getParadigm() {
+			return paradigm;
+		}
+		
+		
 		public String constructLemma(String stem, Paradigm paradigm) {
 			return stem + paradigm.getNormal().getEnding();
 		}
