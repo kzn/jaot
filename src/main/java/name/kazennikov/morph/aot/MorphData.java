@@ -15,8 +15,10 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import name.kazennikov.dafsa.CharFSTWalker;
+import name.kazennikov.dafsa.FSAException;
 import name.kazennikov.dafsa.IntNFSA;
-import name.kazennikov.dafsa.IntNFSA.IntNFSABuilder;
+import name.kazennikov.dafsa.IntNFSAv2;
+import name.kazennikov.dafsa.IntNFSAv2.IntNFSABuilder;
 import name.kazennikov.dafsa.IntTrie;
 
 
@@ -28,11 +30,11 @@ import name.kazennikov.dafsa.IntTrie;
 public class MorphData {
 	List<BitSet> featSets;
 	IntTrie fsa;
-	IntNFSA fst;
-	IntNFSA guesser;
+	IntNFSAv2 fst;
+	IntNFSAv2 guesser;
 	
 	
-	protected MorphData(List<BitSet> featSets, IntTrie fsa, IntNFSA fst, IntNFSA guesser) {
+	protected MorphData(List<BitSet> featSets, IntTrie fsa, IntNFSAv2 fst, IntNFSAv2 guesser) {
 		super();
 		this.featSets = featSets;
 		this.fsa = fsa;
@@ -40,7 +42,7 @@ public class MorphData {
 		this.guesser = guesser;
 	}
 	
-	public static MorphData read(File file) throws IOException {
+	public static MorphData read(File file) throws IOException, FSAException {
 		DataInputStream s = null;
 
 		try {
@@ -68,9 +70,9 @@ public class MorphData {
 			
 			IntNFSABuilder intFSTBuilder = new IntNFSABuilder();
 			IntTrie.Reader.read(s, intFSTBuilder, 4);
-			IntNFSA fst = intFSTBuilder.build();
+			IntNFSAv2 fst = intFSTBuilder.build();
 			IntTrie.Reader.read(s, intFSTBuilder, 4);
-			IntNFSA guesser = intFSTBuilder.build();
+			IntNFSAv2 guesser = intFSTBuilder.build();
 			
 			return new MorphData(featSets, fsa, fst, guesser);
 			
@@ -83,7 +85,7 @@ public class MorphData {
 	}
 	
 
-	public IntNFSA getFST() {
+	public IntNFSAv2 getFST() {
 		return fst;
 	}
 	
@@ -91,7 +93,7 @@ public class MorphData {
 		return fsa;
 	}
 	
-	public IntNFSA getGuesser() {
+	public IntNFSAv2 getGuesser() {
 		return guesser;
 	}
 	
@@ -99,14 +101,14 @@ public class MorphData {
 		return featSets.get(index);
 	}
 	
-	public static void main(String[] args) throws IOException, JAXBException {
+	public static void main(String[] args) throws IOException, JAXBException, FSAException {
 		MorphConfig mc = MorphConfig.newInstance(new File("russian.xml"));
 		
 		final MorphLanguage ml = new MorphLanguage(mc);
 
 		final MorphData mdata = MorphData.read(new File("russian.dat"));
 		
-		CharFSTWalker walker = mdata.fst.makeFSTWalker();
+		CharFSTWalker walker = mdata.fst.makeWalker();
 		
 		walker.walk("некрофил", 0, 8, new CharFSTWalker.Processor() {
 			

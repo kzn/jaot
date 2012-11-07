@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import name.kazennikov.dafsa.FSAException;
+
 import com.google.common.base.Objects;
 
 public class MorphLanguage {
@@ -264,7 +266,7 @@ public class MorphLanguage {
 		return md;
 	}
 	
-	public MorphData readData() throws IOException {
+	public MorphData readData() throws IOException, FSAException {
 		MorphData data = MorphData.read(new File(mc.datPath));
 		
 		return data;

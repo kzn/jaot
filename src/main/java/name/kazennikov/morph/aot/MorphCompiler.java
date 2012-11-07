@@ -8,6 +8,7 @@ import gnu.trove.procedure.TObjectIntProcedure;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
@@ -15,6 +16,7 @@ import java.util.BitSet;
 import javax.xml.bind.JAXBException;
 
 import name.kazennikov.dafsa.CharFSA;
+import name.kazennikov.dafsa.FSAException;
 import name.kazennikov.dafsa.IntFSA;
 import name.kazennikov.dafsa.Nodes;
 
@@ -68,7 +70,7 @@ public class MorphCompiler {
 		this.morphLanguage = morphLanguage;	
 	}
 	
-	public void compile(MorphDict md, int predictionDepth, int predictionFreq, File dest) throws IOException {
+	public void compile(MorphDict md, int predictionDepth, int predictionFreq, File dest) throws FSAException {
 		
 		CharFSA fsa = new CharFSA.Simple(new Nodes.CharTroveNode());
 		IntFSA fst = new IntFSA.Simple(new Nodes.IntTroveNode());
@@ -130,7 +132,7 @@ public class MorphCompiler {
 		System.out.printf("Elapsed on writing:%d ms%n", elapsed);
 	}
 	
-	private void write(File dest,TObjectIntHashMap<BitSet> featSets, CharFSA fsa,	IntFSA fst, IntFSA fstGuesser) throws IOException {
+	private void write(File dest,TObjectIntHashMap<BitSet> featSets, CharFSA fsa,	IntFSA fst, IntFSA fstGuesser) throws FSAException {
 		DataOutputStream dos = null;
 		try {
 			dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(dest)));
@@ -138,14 +140,21 @@ public class MorphCompiler {
 			fsa.write(new CharFSA.FileWriter(dos));
 			fst.write(new IntFSA.FileWriter(dos));
 			fstGuesser.write(new IntFSA.FileWriter(dos));
+		} catch(IOException e) {
+			throw new FSAException(e);
 		} finally {
-			if(dos != null)
-				dos.close();
+			if(dos != null) {
+				try {
+					dos.close();
+				} catch(IOException e) {
+					throw new FSAException(e);
+				}
+			}
 		}
 		
 	}
 
-	public void write(DataOutputStream s, TObjectIntHashMap<BitSet> featSets) throws IOException {
+	public void write(DataOutputStream s, TObjectIntHashMap<BitSet> featSets) throws FSAException {
 		final BitSet[] sets = new BitSet[featSets.size() + 1];
 		sets[0] = new BitSet();
 		featSets.forEachEntry(new TObjectIntProcedure<BitSet>() {
@@ -156,15 +165,19 @@ public class MorphCompiler {
 			}
 		});
 
-		s.writeInt(sets.length);
+		try {
+			s.writeInt(sets.length);
 
-		for(BitSet featSet : sets) {
-			s.writeInt(featSet.cardinality());
-			for(int i = 0; i != featSet.length(); i++) {
-				if(featSet.get(i)) {
-					s.writeInt(i);
+			for(BitSet featSet : sets) {
+				s.writeInt(featSet.cardinality());
+				for(int i = 0; i != featSet.length(); i++) {
+					if(featSet.get(i)) {
+						s.writeInt(i);
+					}
 				}
 			}
+		} catch(IOException e) {
+			throw new FSAException(e);
 		}
 	}
 	
@@ -193,7 +206,7 @@ public class MorphCompiler {
     	}
     }
     
-	public static void main(String[] args) throws JAXBException, IOException {
+	public static void main(String[] args) throws JAXBException, IOException, FSAException {
 		MorphConfig mc = MorphConfig.newInstance(new File("russian.xml"));
 		
 		MorphLanguage ml = new MorphLanguage(mc);

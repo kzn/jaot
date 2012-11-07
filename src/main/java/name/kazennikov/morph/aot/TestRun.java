@@ -12,15 +12,22 @@ import java.util.BitSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.bind.JAXBException;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multiset;
+
 import name.kazennikov.dafsa.CharFSA;
+import name.kazennikov.dafsa.CharTrie;
+import name.kazennikov.dafsa.FSAException;
 import name.kazennikov.dafsa.GenericTrie;
 import name.kazennikov.dafsa.IntFSA;
 import name.kazennikov.dafsa.IntNFSA;
+import name.kazennikov.dafsa.IntNFSAv2;
 import name.kazennikov.dafsa.Nodes;
-import name.kazennikov.dafsa.IntNFSA.IntNFSABuilder;
 
 public class TestRun {
 
@@ -44,7 +51,7 @@ public class TestRun {
             return new FSTNode(new HashSet<Integer>());
         }
     }
-	public static void main(String[] args) throws JAXBException, IOException {
+	public static void main(String[] args) throws JAXBException, IOException, FSAException {
 		MorphConfig mc = MorphConfig.newInstance(new File("russian.xml"));
 		
 		final MorphLanguage ml = new MorphLanguage(mc);
@@ -52,22 +59,32 @@ public class TestRun {
 		long st = System.currentTimeMillis();
 		MorphDict md = ml.readDict();
 		
+		
 
 		
 
         final TObjectIntHashMap<BitSet> featSets = new TObjectIntHashMap<BitSet>();
+        final TObjectIntHashMap<String> lemmaSet = new TObjectIntHashMap<String>();
         IntFSA fst = new IntFSA.Simple(new Nodes.IntTroveNode());
         CharFSA fsaGold = new CharFSA.Simple(new Nodes.CharTroveNode());
         CharFSA fsa = new CharFSA.Simple(new Nodes.CharSimpleNode());
+        CharTrie charTrie = new CharTrie();
         TIntArrayList fstInput = new TIntArrayList();
         long st1 = System.currentTimeMillis();
         
         int count = 0;
 		for(MorphDict.Lemma lemma : md.lemmas) {
 			
+			int lemmaId = lemmaSet.get(lemma.lemma);
+			if(lemmaId == 0) {
+				lemmaId = lemmaSet.size() + 1;
+				lemmaSet.put(lemma.lemma, lemmaId);
+			}
+			
 			for(MorphDict.WordForm wf : lemma.expand()) {
 				BitSet feats = ml.getWordFormFeats(wf.feats, wf.commonAnCode);
 				int featId = featSets.get(feats);
+				
 				
 				if(featId == 0) {
 					featId = featSets.size() + 1;
@@ -77,10 +94,12 @@ public class TestRun {
 				count++;
 
 				//System.out.println(wf.wordForm);
-				MorphCompiler.expand(fstInput, wf.wordForm, wf.lemma);
+				//MorphCompiler.expand(fstInput, wf.wordForm, wf.lemma);
                 //fst.add(fstInput, featId);
 				//fsaGold.addMinWord(wf.getWordForm(), featId);
 				fsa.addMinWord(wf.getWordForm(), featId);
+				//charTrie.add(wf.getWordForm(), featId);
+				//charTrie.add(fstInput, featId);
 
 				
 //				if(fsa.size() != fsaGold.size()) {
@@ -99,11 +118,107 @@ public class TestRun {
 		System.out.printf("Elapsed: %d ms%n", st);
         System.out.printf("FSA size: %d%n", fst.size());
         System.out.printf("FSA size: %d%n", fsa.size());
+        System.out.printf("charTrie size: %d%n", charTrie.size());
 		System.out.printf("Dict size: %d%n", md.lemmas.size());
 		System.out.printf("featSets: %d%n", featSets.size());
-		IntNFSABuilder intFSTBuilder = new IntNFSABuilder();
+		System.out.printf("Wordforms: %d%n", count);
+		
+		final AtomicInteger stateFinals = new AtomicInteger(0);
+		
+		charTrie.write(new IntFSA.Events() {
+			int state = 0;
+			
+			@Override
+			public void transitions(int n) throws FSAException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void transition(int input, int dest) throws FSAException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void states(int states) throws FSAException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void stateFinal(int fin) throws FSAException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void state(int state) throws FSAException {
+				this.state = state;
+			}
+			
+			@Override
+			public void startTransitions() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void startStates() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void startState() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void startFinals() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void finals(int n) throws FSAException {
+				if(n > 0) {
+					stateFinals.incrementAndGet();
+				}
+				
+			}
+			
+			@Override
+			public void endTransitions() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void endStates() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void endState() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void endFinals() {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		System.out.printf("State with finals (charTrie): %d%n", stateFinals.get());
+		
+		IntNFSAv2.IntNFSABuilder intFSTBuilder = new IntNFSAv2.IntNFSABuilder();
 		fst.write(intFSTBuilder);
-		IntNFSA nfsa = intFSTBuilder.build();
+		IntNFSAv2 nfsa = intFSTBuilder.build();
 		
 		final BitSet[] fss = new BitSet[featSets.size() + 1];
 		
