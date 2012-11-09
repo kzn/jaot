@@ -88,7 +88,7 @@ public class MorphCompiler {
         long elapsed = System.currentTimeMillis();
 		for(MorphDict.Lemma lemma : md.getLemmas()) {
 	        lemmaNum++;
-			for(MorphDict.WordForm wf : lemma.expand()) {
+			for(MorphDict.WordForm wf : lemma.expand(true)) {
 				BitSet feats = morphLanguage.getWordFormFeats(wf.getFeats(), wf.getCommonAnCode());
 				int featId = featSets.get(feats);
 				

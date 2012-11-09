@@ -26,10 +26,10 @@ public class MorphDict {
 		GramTable.Record commonAnCode;
 		
 		
-		public WordForm(String worfForm, String lemma, GramTable.Record feats,
+		public WordForm(String wordForm, String lemma, GramTable.Record feats,
 				GramTable.Record commonAnCode) {
 			super();
-			this.wordForm = worfForm;
+			this.wordForm = wordForm;
 			this.lemma = lemma;
 			this.feats = feats;
 			this.commonAnCode = commonAnCode;
@@ -95,7 +95,7 @@ public class MorphDict {
 			return stem + paradigm.getNormal().getEnding();
 		}
 		
-		public List<WordForm> expand() {
+		public List<WordForm> expand(boolean processYo) {
 			List<WordForm> result = new ArrayList<MorphDict.WordForm>();
 			StringBuilder sb = new StringBuilder(stem.length());
 			
@@ -114,7 +114,8 @@ public class MorphDict {
 				String wf = sb.toString();
 				result.add(new WordForm(wf, lemma, feats, commonFeats));
 				
-				if(wf.indexOf("Ё") != -1) {
+				
+				if(processYo && wf.indexOf("Ё") != -1) {
 					wf = wf.replace('Ё', 'Е');
 					result.add(new WordForm(wf, lemma, feats, commonFeats));
 				}
@@ -123,23 +124,6 @@ public class MorphDict {
 			return result;
 		}
 		
-		public List<WordForm> expandAccents() {
-			List<WordForm> wfs = expand();
-			List<WordForm> accentedWfs = new ArrayList<MorphDict.WordForm>();
-			
-			for(int i = 0; i != wfs.size(); i++) {
-				int accent = accentModel.getAccent(i);
-				WordForm wf = wfs.get(i);
-				if(accent != AccentModel.NO_ACCENT) {
-					StringBuilder wordForm = new StringBuilder(wf.wordForm);
-					wordForm.insert(accent + 1, '`');
-					accentedWfs.add(new WordForm(wordForm.toString(), wf.lemma, wf.feats, wf.commonAnCode));
-				}
-			}
-			
-			wfs.addAll(accentedWfs);
-			return wfs;
-		}
 	}
 	
 	public static class AccentModel {
@@ -366,7 +350,7 @@ public class MorphDict {
 		int forms = 0;
 		
 		for(Lemma l : md.lemmas) {
-			List<WordForm> wfs = l.expandAccents();
+			List<WordForm> wfs = l.expand(true);
 			
 			forms += wfs.size();
 		}
