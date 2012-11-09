@@ -23,6 +23,12 @@ import com.google.common.base.Splitter;
  *
  */
 public class GramTable {
+	
+	/**
+	 * Single gram table record - contents of the 'ancode'
+	 * @author Anton Kazennikov
+	 *
+	 */
 	public static class Record {
 		String pos;
 		String type;

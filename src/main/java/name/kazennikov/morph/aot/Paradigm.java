@@ -5,7 +5,26 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 
+/**
+ * Paradigm - set of word inflections modifiers.
+ * 
+ * The first inflection modifier is the modifier for the normal form.
+ * 
+ * @author Anton Kazennikov
+ *
+ */
 public class Paradigm {
+	
+	/**
+	 * Single paradigm entry: 
+	 * <ul>
+	 * <li> prefix of the stem
+	 * <li> ending (suffix) for the stem
+	 * <li> attached morphological features
+	 * </ul>
+	 * @author Anton Kazennikov
+	 *
+	 */
 	public static class Entry {
 		String ending;
 		String prefix;
