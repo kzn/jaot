@@ -81,7 +81,7 @@ public class TestRun {
 				lemmaSet.put(lemma.lemma, lemmaId);
 			}
 			
-			for(MorphDict.WordForm wf : lemma.expand()) {
+			for(MorphDict.WordForm wf : lemma.expand(true)) {
 				BitSet feats = ml.getWordFormFeats(wf.feats, wf.commonAnCode);
 				int featId = featSets.get(feats);
 				
