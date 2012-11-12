@@ -115,6 +115,9 @@ public class MorphCompiler {
 	
 		elapsed = System.currentTimeMillis() - elapsed;
 		System.out.printf("Elapsed on fsa building:%d ms%n", elapsed);
+		System.out.printf("FSA size:%d%n", fsa.size());
+		System.out.printf("FST size:%d%n", fst.size());
+		System.out.printf("FST-Prediction size:%d%n", fstPredictionSet.size());
 
 		
 		for(Multiset.Entry<GuesserEnding> e : fstPredictionSet.entrySet()) {

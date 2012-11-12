@@ -195,6 +195,11 @@ public class MorphDict {
 				throw new IllegalStateException("Corrupted dictionary");
 			}
 			
+			int commentStart = line.indexOf("q//q");
+			if(commentStart != -1) {
+				line = line.substring(0, commentStart);
+			}
+			
 			Paradigm paradigm = new Paradigm();
 			// %flexia*gramCode*prefix
 			for(String entry : Splitter.on('%').omitEmptyStrings().split(line)) {
