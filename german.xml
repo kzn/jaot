@@ -1,0 +1,134 @@
+<features>
+	<group name="POS">
+		<feat>ART</feat>
+		<feat>ADJ</feat>
+		<feat>ADV</feat>
+		<feat>EIG</feat>
+		<feat>SUB</feat>
+		<feat>VER</feat>
+		<feat>PA1</feat>
+		<feat>PA2</feat>
+		<feat>PRO</feat>
+		<feat>PRP</feat>
+		<feat>KON</feat>
+		<feat>NEG</feat>
+		<feat>INJ</feat>
+		<feat>ZAL</feat>
+		<feat>ZUS</feat>
+		<feat>PROBEG</feat>
+		<feat>INF</feat>
+	</group>
+
+	<group name="common-unknown">
+		<feat>noa</feat>
+		<feat>prd</feat>
+		<feat>pro</feat>
+		<feat>tmp</feat>
+	</group>
+
+	<group name="eigennamen">
+		<feat>nac</feat>
+		<feat>mou</feat>
+		<feat>cou</feat>
+		<feat>geo</feat>
+		<feat>wat</feat>
+		<feat>geb</feat>
+		<feat>std</feat>
+		<feat>lok</feat>
+		<feat>vor</feat>
+	</group>
+
+
+	<group name="reflexive-verb">
+		<feat>sich-akk</feat>
+		<feat>sich-dat</feat>
+	</group>
+
+	<group name="verb-class">
+		<feat>sft</feat>
+		<feat>non</feat>
+		<feat>mod</feat>
+		<feat>aux</feat>
+	</group>
+
+	<group name="verb-forms">
+		<feat>kj1</feat>
+		<feat>kj2</feat>
+		<feat>pa1</feat>
+		<feat>pa2</feat>
+		<feat>eiz</feat>
+		<feat>imp</feat>
+		<feat>prt</feat>
+		<feat>prae</feat>
+	</group>
+
+	<group name="adj">
+		<feat>gru</feat>
+		<feat>kom</feat>
+		<feat>sup</feat>
+	</group>
+
+	<group name="konjunk">
+		<feat>pri</feat>
+		<feat>inf</feat>
+		<feat>vgl</feat>
+		<feat>neb</feat>
+		<feat>unt</feat>
+	</group>
+
+
+	<group name="pronoun">
+		<feat>per</feat>
+		<feat>dem</feat>
+		<feat>inr</feat>
+		<feat>pos</feat>
+		<feat>ref</feat>
+		<feat>rin</feat>
+		<feat>alg</feat>
+	</group>
+
+	<group name="article">
+		<feat>sol</feat>
+		<feat>ind</feat>
+		<feat>def</feat>
+	</group>
+
+	<group name="person">
+		<feat>1</feat>
+		<feat>2</feat>
+		<feat>3</feat>
+	</group>
+
+	<group name="gender">
+		<feat>fem</feat>
+		<feat>mas</feat>
+		<feat>neu</feat>
+	</group>
+
+	<group name="number">
+		<feat>plu</feat>
+		<feat>sin</feat>
+	</group>
+
+	<group name="case">
+		<feat>nom</feat>
+		<feat>gen</feat>
+		<feat>dat</feat>
+		<feat>akk</feat>
+	</group>
+
+	<group name="abbrs">
+		<feat>abbr</feat>
+	</group>
+
+	<group name="einwohnerbezeichnung">
+		<feat>ew</feat>
+	</group>
+
+	<group name="transitiv">
+		<feat>trans</feat>
+		<feat>intra</feat>
+		<feat>imper</feat>
+	</group>
+
+</features>
