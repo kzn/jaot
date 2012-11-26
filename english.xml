@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<features>
+    <group name="POS">
+	<feat>NOUN</feat>
+	<feat>ADJECTIVE</feat>
+	<feat>VERB</feat>
+	<feat>VBE</feat>
+	<feat>MOD</feat>
+	<feat>NUMERAL</feat>
+	<feat>CONJ</feat>
+	<feat>INT</feat>
+	<feat>PREP</feat>
+	<feat>PART</feat>
+	<feat>ARTICLE</feat>
+	<feat>ADVERB</feat>
+	<feat>PN</feat>
+	<feat>ORDNUM</feat>
+	<feat>PRON</feat>
+	<feat>POSS</feat>
+	<feat>PN_ADJ</feat>
+    </group>
+
+    <group name="number">
+	<feat>sg</feat>
+	<feat>pl</feat>
+	<feat>uncount</feat>
+    </group>
+
+    <group name="gender">
+	<feat>m</feat>
+	<feat>f</feat>
+    </group>
+
+    <group name="person">
+	<feat>1</feat>
+	<feat>2</feat>
+	<feat>3</feat>
+    </group>
+
+    <group name="case">
+	<feat>nom</feat>
+	<feat>obj</feat>
+    </group>
+
+  
+    <group name="misc">
+	<feat>anim</feat>
+	<feat>perf</feat>
+	<feat>narr</feat>
+	<feat>prop</feat>
+	<feat>pers</feat>
+	<feat>poss</feat>
+	<feat>pred</feat>
+	<feat>ref</feat>
+	<feat>dem</feat>
+	<feat>mass</feat>
+	<feat>comp</feat>
+	<feat>sup</feat>
+	<feat>prsa</feat>
+	<feat>inf</feat>
+	<feat>pasa</feat>
+	<feat>pp</feat>
+	<feat>ing</feat>
+	<feat>fut</feat>
+	<feat>if</feat>
+	<feat>plsq</feat>
+	<feat>plsgs</feat>
+  </group>
+
+  <group name="ne">
+      <feat>name</feat>
+      <feat>org</feat>
+      <feat>geo</feat>
+  </group>
+</features>
+
+
