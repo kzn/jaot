@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import name.kazennikov.dafsa.FSAException;
+import name.kazennikov.dafsa.obsolete.FSAException;
 
 import com.google.common.base.Objects;
 

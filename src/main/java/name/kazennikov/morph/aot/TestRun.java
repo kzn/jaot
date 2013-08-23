@@ -16,18 +16,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.bind.JAXBException;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multiset;
+import name.kazennikov.dafsa.obsolete.CharFSA;
+import name.kazennikov.dafsa.obsolete.CharTrie;
+import name.kazennikov.dafsa.obsolete.FSAException;
+import name.kazennikov.dafsa.obsolete.GenericTrie;
+import name.kazennikov.dafsa.obsolete.IntFSA;
+import name.kazennikov.dafsa.obsolete.IntNFSAv2;
+import name.kazennikov.dafsa.obsolete.Nodes;
 
-import name.kazennikov.dafsa.CharFSA;
-import name.kazennikov.dafsa.CharTrie;
-import name.kazennikov.dafsa.FSAException;
-import name.kazennikov.dafsa.GenericTrie;
-import name.kazennikov.dafsa.IntFSA;
-import name.kazennikov.dafsa.IntNFSA;
-import name.kazennikov.dafsa.IntNFSAv2;
-import name.kazennikov.dafsa.Nodes;
 
 public class TestRun {
 

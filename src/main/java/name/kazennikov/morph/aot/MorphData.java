@@ -14,12 +14,12 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import name.kazennikov.dafsa.CharFSTWalker;
-import name.kazennikov.dafsa.FSAException;
-import name.kazennikov.dafsa.IntNFSA;
-import name.kazennikov.dafsa.IntNFSAv2;
-import name.kazennikov.dafsa.IntNFSAv2.IntNFSABuilder;
-import name.kazennikov.dafsa.IntTrie;
+import name.kazennikov.dafsa.obsolete.CharFSTWalker;
+import name.kazennikov.dafsa.obsolete.FSAException;
+import name.kazennikov.dafsa.obsolete.IntNFSAv2;
+import name.kazennikov.dafsa.obsolete.IntNFSAv2.IntNFSABuilder;
+import name.kazennikov.dafsa.obsolete.IntTrie;
+
 
 
 /**
@@ -64,7 +64,7 @@ public class MorphData {
 			
 			
 			
-			IntTrie.SimpleBuilder intTrieBuilder = new IntTrie.SimpleBuilder();
+			IntTrie.SimpleBuilder<IntTrie> intTrieBuilder = new IntTrie.SimpleBuilder<IntTrie>(new IntTrie());
 			IntTrie.Reader.read(s, intTrieBuilder, 2);
 			IntTrie fsa = intTrieBuilder.build();
 			

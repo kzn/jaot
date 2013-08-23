@@ -8,17 +8,16 @@ import gnu.trove.procedure.TObjectIntProcedure;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
 
 import javax.xml.bind.JAXBException;
 
-import name.kazennikov.dafsa.CharFSA;
-import name.kazennikov.dafsa.FSAException;
-import name.kazennikov.dafsa.IntFSA;
-import name.kazennikov.dafsa.Nodes;
+import name.kazennikov.dafsa.obsolete.CharFSA;
+import name.kazennikov.dafsa.obsolete.FSAException;
+import name.kazennikov.dafsa.obsolete.IntFSA;
+import name.kazennikov.dafsa.obsolete.Nodes;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.HashMultiset;
