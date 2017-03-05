@@ -3,7 +3,6 @@ package name.kazennikov.morph.aot;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -33,11 +32,7 @@ public class GramTable {
 		String pos;
 		String type;
 		List<String> feats;
-		
-		public Record() {
-			
-		}
-		
+
 		public Record(String pos, String type, List<String> feats) {
 			this.pos = pos;
 			this.type = type;
@@ -105,16 +100,13 @@ public class GramTable {
 	}
 	
 	public void read(File f, Charset charset) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), charset));
-		try {
+		try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), charset))) {
 			read(br);
-		} finally {
-			br.close();
 		}
 	}
 	
 	public static void main(String[] args) throws IOException {
-		File path = new File("seman/trunk/Dicts/Morph/ggramtab.tab");
+		File path = new File("modules/jaot/seman/trunk/Dicts/Morph/ggramtab.tab");
 		GramTable gramTable = new GramTable();
 		gramTable.read(path, Charset.forName("CP1251"));
 	}
