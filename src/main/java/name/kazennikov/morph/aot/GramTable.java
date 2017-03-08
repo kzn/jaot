@@ -29,9 +29,9 @@ public class GramTable {
 	 *
 	 */
 	public static class Record {
-		String pos;
-		String type;
-		List<String> feats;
+		public final String pos;
+		public final String type;
+		public final List<String> feats;
 
 		public Record(String pos, String type, List<String> feats) {
 			this.pos = pos;
