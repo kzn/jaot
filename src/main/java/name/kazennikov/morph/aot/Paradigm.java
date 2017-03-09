@@ -95,4 +95,33 @@ public class Paradigm {
 		return String.format("Paradigm:%s", entries);
 	}
 
+    public List<MorphDict.WordForm> expand(String stem, String lemma, GramTable.Record commonFeats, boolean processYo) {
+        List<MorphDict.WordForm> result = new ArrayList<MorphDict.WordForm>();
+        StringBuilder sb = new StringBuilder(stem.length());
+
+        for(int i = 0; i != size(); i++) {
+            sb.setLength(0);
+            Paradigm.Entry parEntry = get(i);
+
+            GramTable.Record feats = parEntry.getRec();
+
+            if(parEntry.hasPrefix()) {
+                sb.append(parEntry.getPrefix());
+            }
+
+            sb.append(stem);
+            sb.append(parEntry.getEnding());
+            String wf = sb.toString();
+            result.add(new MorphDict.WordForm(wf, lemma, feats, commonFeats));
+
+
+            if(processYo && wf.indexOf("Ё") != -1) {
+                wf = wf.replace('Ё', 'Е');
+                result.add(new MorphDict.WordForm(wf, lemma, feats, commonFeats));
+            }
+        }
+
+        return result;
+    }
+
 }

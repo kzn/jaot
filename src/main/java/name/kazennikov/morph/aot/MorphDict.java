@@ -62,8 +62,13 @@ public class MorphDict {
 			return commonAnCode;
 		}
 	}
-	
-	public static class Lemma {
+
+    public static String constructLemma(String stem, Paradigm paradigm) {
+        return stem + paradigm.getNormal().getEnding();
+    }
+
+
+    public static class Lemma {
 		String stem;
 		String lemma;
 		Paradigm paradigm;
@@ -89,12 +94,11 @@ public class MorphDict {
 		public Paradigm getParadigm() {
 			return paradigm;
 		}
+
+
 		
 		
-		public String constructLemma(String stem, Paradigm paradigm) {
-			return stem + paradigm.getNormal().getEnding();
-		}
-		
+
 		public List<WordForm> expand(boolean processYo) {
 			List<WordForm> result = new ArrayList<MorphDict.WordForm>();
 			StringBuilder sb = new StringBuilder(stem.length());
@@ -123,8 +127,15 @@ public class MorphDict {
 			
 			return result;
 		}
-		
-	}
+
+        public String getStem() {
+            return stem;
+        }
+
+        public GramTable.Record getCommonFeats() {
+            return commonFeats;
+        }
+    }
 	
 	public static class AccentModel {
 		public static final int NO_ACCENT = 255;
